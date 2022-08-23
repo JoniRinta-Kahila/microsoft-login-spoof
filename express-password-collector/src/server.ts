@@ -1,10 +1,12 @@
 import express from "express";
-import bodyParser from "body-parser";
 import fs from "fs";
+import cors from 'cors';
 
 const app = express();
+app.use(cors({ origin: '*'}));
 
-app.use(bodyParser.urlencoded({extended: false}));
+app.use(express.urlencoded({ extended: false }));
+app.use(express.json());
 
 app.use(express.static(__dirname + "/public/live"));
 
@@ -23,7 +25,7 @@ app.post("/userdata", (req, res, next) => {
         res.sendStatus(200);
         return;
     } catch(err) {
-        console.log(err.name);
+        console.log(err);
         res.sendStatus(404);
         return;
     }
